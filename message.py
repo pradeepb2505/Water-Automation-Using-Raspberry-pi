@@ -1,0 +1,49 @@
+#!/usr/bin/python
+#import urllib.request as opener
+import urllib2
+#import http.cookiejar as cj
+import cookielib
+from getpass import getpass
+import sys
+def sendMessage(level):
+    username = #way2sms username
+    passwd = #way2sms password
+    #message = raw_input("Enter Message: ")
+    vol1 = 3.14*level*4*4/1000
+    vol2 = vol1 * 1286.67
+    message = "Sample: "+ str(vol1) + "L Real: " + str(vol2) + "L\nPlease Conserve Water"
+    #number = raw_input("Enter Mobile number:")
+    number = "9741735429"
+    message = "+".join(message.split(' '))
+     
+    #Logging into the SMS Site
+    url = 'http://site24.way2sms.com/Login1.action?'
+    data = 'username='+username+'&password='+passwd+'&Submit=Sign+in'
+     
+    #For Cookies:
+    cj = cookielib.CookieJar()
+    opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
+     
+    # Adding Header detail:
+    opener.addheaders = [('User-Agent','Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2062.120 Safari/537.36')]
+     
+    try:
+        usock = opener.open(url, data)
+    except IOError:
+        print ("Error while logging in.")
+        sys.exit(1)
+     
+     
+    jession_id = str(cj).split('~')[1].split(' ')[0]
+    send_sms_url = 'http://site24.way2sms.com/smstoss.action?'
+    send_sms_data = 'ssaction=ss&Token='+jession_id+'&mobile='+number+'&message='+message+'&msgLen=136'
+    opener.addheaders = [('Referer', 'http://site25.way2sms.com/sendSMS?Token='+jession_id)]
+     
+    try:
+        sms_sent_page = opener.open(send_sms_url,send_sms_data)
+    except IOError:
+        print ("Error while sending message")
+        
+
+    print ("SMS has been sent.")
+    return
