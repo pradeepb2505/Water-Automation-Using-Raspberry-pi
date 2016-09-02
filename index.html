@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Water Management" />
+    <meta name="keywords" content="Water Automtion" />
+    <meta name="author" content="IOT Project" />
+    <title>Water Automation</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+
+    <link rel="shortcut icon" type="image/x-icon" href="images/logo.ico">
+    <link rel="stylesheet" href="mycss.css">
+    <script src="bower_components/angular-tablesort/js/angular-tablesort.js"></script>
+    <!-- <link href="css/WMGeneralStyle.css" type="text/css" rel="stylesheet" />
+	<link href="css/WMHeaderFooter.css" type="text/css" rel="stylesheet" />
+	<link href="css/WMHome.css" type="text/css" rel="stylesheet" /> -->
+
+    <style>
+        .featurette-heading {
+            color: #00903A;
+        }
+    </style>
+    <script>
+
+
+
+    </script>
+</head>
+
+    <body style="background-color:#98DF00" ng-app="myApp" ng-controller="myCtrl" ng-onload="lev_click(myData['level'])">
+    
+    <div class="jumbotron text-center">
+        <div class="page-header">
+            <h1 class="display-1">WATER AUTOMATION </h1> </div>
+        <p>Conserve Water! Save The Future!</p>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <!------------------------------------->
+            <div class="col-xs-12 col-lg-6 col-sm-6 col-md-6 text-center">
+                <h3>Water Level</h3>
+                <div class="well well-lg">
+                    <p >
+                        <button class="btn btn-danger" ng-click="lev_click(myData['level'])">Click</button>
+                    </p>
+                    <div id="container">
+                        <div id="animate" ng-style="{ 'height': myData['level']*10+'px' }"></div>
+                    </div>
+                    
+                </div>
+            </div>
+            <!------------------------------------->
+            <div class="col-xs-12 col-lg-6 col-sm-6 col-md-6 text-center">
+                <h3>Details</h3>
+                <div class="well well-lg">
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="user">User:</label>
+                            <div class="col-sm-6">
+                                <input type="user" class="form-control" id="user" placeholder={{myData["user_name"]}} readonly> </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="id">ID:</label>
+                            <div class="col-sm-6">
+                                <input type="id" class="form-control" id="id" placeholder=" {{myData['user_id']}}" readonly> </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="level">Water Level:</label>
+                            <div class="col-sm-6">
+                                <input type="level" class="form-control" id="level" placeholder= " {{myData['level']}}" readonly > </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="total">Total Use:</label>
+                            <div class="col-sm-6">
+                                <input type="total" class="form-control" id="total" placeholder=" {{myData['content_used'] * 1286.67}}" readonly> </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="cost">Cost per liter:</label>
+                            <div class="col-sm-6">
+                                <input type="cost" class="form-control" id="cost" placeholder="5Rs/L" readonly> </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="cost">Cost:</label>
+                            <div class="col-sm-6">
+                                <input type="cost" class="form-control" id="cost" placeholder=" {{myData['content_used'] * 5 * 1286.67}}" readonly> </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!------------------------------------->
+            <div class="col-xs-12 col-lg-12 col-sm-12 col-md-12 text-center">
+                <h3>Water Table - Details</h3>
+                <p>Water Consumption details over the last few weeks</p>
+                <div class="table-responsive">
+                    <pre>Sort by = {{propertyName}}; reverse = {{reverse}}</pre>
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th><button ng-click="sortBy('name')">Name</button><span class="sortorder" ng-show="propertyName === 'name'" ng-class="{reverse: reverse}"></span></th>
+                                <th>Water Used</th>
+                                <th>Cost For Water</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr ng-repeat="(key,value) in myData['details'] | orderBy:propertyName:reverse" >
+                                <td>{{key}}</td>
+                                <td>{{formatNumber(value.used * 1286.67)}}</td>
+                                <td>{{formatNumber(value.used * 5 * 1286.67)}}</td>
+                            </tr>
+
+                        </tbody>
+                        
+
+                    </table>
+                    <div >
+                        <pre>Sort by = {{propertyName}}; reverse = {{reverse}}</pre>
+                        <hr/>
+                        <button ng-click="propertyName = null; reverse = false">Set to unsorted</button>
+                        <hr/>
+                        <table class="friends">
+                            <tr>
+                                <th>
+                                    <button ng-click="sortBy('name')">Name</button>
+                                    <span class="sortorder" ng-show="propertyName === 'name'" ng-class="{reverse: reverse}"></span>
+                                </th>
+                                <th>
+                                    <button ng-click="sortBy('phone')">Phone Number</button>
+                                    <span class="sortorder" ng-show="propertyName === 'phone'" ng-class="{reverse: reverse}"></span>
+                                </th>
+                                <th>
+                                    <button ng-click="sortBy('age')">Age</button>
+                                    <span class="sortorder" ng-show="propertyName === 'age'" ng-class="{reverse: reverse}"></span>
+                                </th>
+                            </tr>
+                            <tr ng-repeat="(key,value) in myData['details'] | orderBy:propertyName:reverse" >
+                                <td>{{key}}</td>
+                                <td>{{formatNumber(value.used * 1286.67)}}</td>
+                                <td>{{formatNumber(value.used * 5 * 1286.67)}}</td>
+                            </tr>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <center>
+        <button type="button" class="btn btn-info">PAY WATER BILL</button>
+    </center>
+
+    <script src="/bower_components/angular/angular.min.js"></script>
+    <script>
+        
+        var app = angular.module('myApp', []);
+        
+        app.controller('myCtrl', function($scope, $http) {
+            angular.module('myApp', ['tableSort']);
+           var json = $http.get("/scripts/data.json").then(function (response) {
+                $scope.myData = response.data;
+               
+            });
+            
+
+
+            $scope.ocw = [json['details']];
+            $scope.ocw = function(obj){
+                return obj? Object.key(obj) : [];
+            }
+            $scope.formatNumber = function(i) {
+                return Math.round(i * 100)/100; 
+            }
+        });
+        app.run(function($rootScope) {
+            $rootScope.lev_click = function(a){
+                var lvl = 200;
+                var elem = document.getElementById("animate");
+                alert(a)
+                elem.style.height = a*10 + 'px';
+
+            }
+        });
+    </script>
+        
+    </script>
+
+</body>
+
+</html>
